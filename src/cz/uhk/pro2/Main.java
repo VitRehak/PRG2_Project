@@ -7,13 +7,11 @@ import cz.uhk.pro2.models.InMemoryChatClient;
 public class Main {
 
     public static void main(String[] args) {
-        MainFrame mainFrame = new MainFrame(800,600);
+        ChatClient chatClient = new InMemoryChatClient();
+
+        MainFrame mainFrame = new MainFrame(800, 600,chatClient);
         mainFrame.setVisible(true);
     }
-
-
-
-
 
 
     public static void testChat() {
@@ -24,14 +22,14 @@ public class Main {
         System.out.println("user is logged:" + chatClient.isAuthenticated());
 
         System.out.println("Currently logged in:");
-        chatClient.getLoggedUsers().forEach(u -> System.out.println(u));
+        chatClient.getLoggedUsers().forEach(System.out::println);
         System.out.println("Sending message 1");
         chatClient.sendMessage("Hello world");
 
         System.out.println("Sending message 2");
         chatClient.sendMessage("hello World 2 ");
 
-        chatClient.getMessages().forEach(m -> System.out.println(m));
+        chatClient.getMessages().forEach(System.out::println);
 
         System.out.println("loging out");
         chatClient.logout();
