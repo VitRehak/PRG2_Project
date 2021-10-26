@@ -42,6 +42,7 @@ public class MainFrame extends JFrame {
         panelMain.add(panelLoggedUser, BorderLayout.EAST);
         add(panelMain);
     }
+
     private void initLoginPanel(JPanel panelLogin) {
         panelLogin.add(new JLabel("Jméno"));
         txtInputName = new JTextField("", 30);
@@ -53,48 +54,54 @@ public class MainFrame extends JFrame {
                 txtInputName.setEditable(true);
                 btnLogin.setText("Login");
                 txtAreaChat.setEnabled(false);
+
             } else {
                 if (txtInputName.getText().length() > 0) {
                     chatClient.login(txtInputName.getText());
                     txtInputName.setEditable(false);
                     btnLogin.setText("Logout");
                     txtAreaChat.setEnabled(true);
+
                 } else {
                     JOptionPane.showMessageDialog(null, "Enter your user name", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
             }
+            refreshMessages();
         });
         panelLogin.add(btnLogin);
     }
+
     private void initChatPanel(JPanel panelChat) {
         panelChat.setLayout(new BoxLayout(panelChat, BoxLayout.X_AXIS));
         txtAreaChat = new JTextArea();
         txtAreaChat.setEditable(false);
         txtAreaChat.setAutoscrolls(true);
         txtAreaChat.setEnabled(false);
+        //-------------------------chatClient.addActionListenerMessageAdded(e -> refreshMessages());
         JScrollPane scrollPane = new JScrollPane(txtAreaChat);
         panelChat.add(scrollPane);
     }
+
     private void initFooterPanel(JPanel panelFooter) {
         txtInputMessage = new JTextField("", 50);
         panelFooter.add(txtInputMessage);
         btnSend = new JButton("Send");
         btnSend.addActionListener(e -> {
-            String text =txtInputMessage.getText();
-            if(text.length()==0)
+            String text = txtInputMessage.getText();
+            if (text.length() == 0)
                 return;
-            if(!chatClient.isAuthenticated())
+            if (!chatClient.isAuthenticated())
                 return;
             chatClient.sendMessage(text);
             txtInputMessage.setText("");
             refreshMessages();
 
 
-
         });
         panelFooter.add(btnSend);
     }
+
     private void initLoggedUsersPanel(JPanel panelLoggedUser) {
         /*Object[][]data= new Object[][]{
                 {"1:1","1:2"},
@@ -112,7 +119,8 @@ public class MainFrame extends JFrame {
         scrollPane.setPreferredSize(new Dimension(250, 500));
         panelLoggedUser.add(scrollPane);
     }
-    private void refreshMessages(){
+
+    private void refreshMessages() {
         txtAreaChat.setText("");
         chatClient.getMessages().forEach(message -> {
             txtAreaChat.append(message.toString());

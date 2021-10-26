@@ -10,6 +10,7 @@ public class InMemoryChatClient implements ChatClient {
     private List<Message> messages;
     private List<String> loggedUsers;
     private List<ActionListener> listenersLoggedUserChanged = new ArrayList<>();
+    //private List<ActionListener> listenerMessageAdded = new ArrayList<>();
 
     public InMemoryChatClient() {
         messages = new ArrayList<>();
@@ -25,23 +26,22 @@ public class InMemoryChatClient implements ChatClient {
     public void login(String userName) {
         loggedUser = userName;
         loggedUsers.add(userName);
-        messages.add(new Message(Message.USER_LOGGED_IN,userName));
+        messages.add(new Message(Message.USER_LOGGED_IN, userName));
         raiseEventListenerUsersChanged();
-
     }
 
     @Override
     public void logout() {
         loggedUsers.remove(loggedUser);
+        messages.add(new Message(Message.USER_LOGGED_OUT, loggedUser));
         loggedUser = null;
-        messages.add(new Message(Message.USER_LOGGED_OUT,loggedUser));
         raiseEventListenerUsersChanged();
-
     }
 
     @Override
     public void sendMessage(String text) {
         messages.add(new Message(loggedUser, text));
+        //raiseEventListenerMessageAdded();
     }
 
     @Override
@@ -59,9 +59,20 @@ public class InMemoryChatClient implements ChatClient {
         listenersLoggedUserChanged.add(toAdd);
     }
 
+    /*@Override
+    public void addActionListenerMessageAdded(ActionListener toAdd) {
+        listenerMessageAdded.add(toAdd);
+    }*/
+
     private void raiseEventListenerUsersChanged() {
         listenersLoggedUserChanged.forEach(l -> {
             l.actionPerformed(new ActionEvent(this, 1, "listenerLoggedUsersChanged"));
         });
     }
+
+    /*private void raiseEventListenerMessageAdded() {
+        listenerMessageAdded.forEach(m -> {
+            m.actionPerformed(new ActionEvent(this, 1, "listenerMessageAdded"));
+        });
+    }*/
 }
