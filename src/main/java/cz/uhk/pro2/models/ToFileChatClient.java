@@ -17,11 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ToFileChatClient implements ChatClient {
-    @Override
-    public void addActionListenerMessageAdded(ActionListener toAdd) {
-
-    }
-
     private static final String MESSAGES_FILE = "./messages.json";
     private Gson gson;
     private ChatFileOperations chatFileOperations;
@@ -29,7 +24,7 @@ public class ToFileChatClient implements ChatClient {
     private List<Message> messages;
     private List<String> loggedUsers;
     private List<ActionListener> listenersLoggedUserChanged = new ArrayList<>();
-    //private List<ActionListener> listenerMessageAdded = new ArrayList<>();
+    private List<ActionListener> listenerMessageAdded = new ArrayList<>();
 
     public ToFileChatClient(ChatFileOperations chatFileOperations) {
         messages = new ArrayList<>();
@@ -63,7 +58,6 @@ public class ToFileChatClient implements ChatClient {
     @Override
     public void sendMessage(String text) {
         addMessage(new Message(loggedUser, text));
-        //raiseEventListenerMessageAdded();
     }
 
     @Override
@@ -81,10 +75,10 @@ public class ToFileChatClient implements ChatClient {
         listenersLoggedUserChanged.add(toAdd);
     }
 
-    /*@Override
+    @Override
     public void addActionListenerMessageAdded(ActionListener toAdd) {
         listenerMessageAdded.add(toAdd);
-    }*/
+    }
 
     private void raiseEventListenerUsersChanged() {
         listenersLoggedUserChanged.forEach(l -> {
@@ -92,14 +86,15 @@ public class ToFileChatClient implements ChatClient {
         });
     }
 
-    /*private void raiseEventListenerMessageAdded() {
+    private void raiseEventListenerMessageAdded() {
         listenerMessageAdded.forEach(m -> {
             m.actionPerformed(new ActionEvent(this, 1, "listenerMessageAdded"));
         });
-    }*/
+    }
     private void addMessage(Message message) {
         messages.add(message);
         writeMessagesToFile();
+        raiseEventListenerMessageAdded();
     }
 
     private void writeMessagesToFile() {
