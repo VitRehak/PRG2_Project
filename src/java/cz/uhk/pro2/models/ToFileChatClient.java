@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ToFileChatClient implements ChatClient {
-    private static final String MESSAGES_FILE = "./messages.json";
     private Gson gson;
     private ChatFileOperations chatFileOperations;
     private String loggedUser;
@@ -27,8 +26,7 @@ public class ToFileChatClient implements ChatClient {
         messages = new ArrayList<>();
         loggedUsers = new ArrayList<>();
         this.chatFileOperations = chatFileOperations;
-        gson = new GsonBuilder().setPrettyPrinting().create();
-        readMessagesFromFile();
+        chatFileOperations.loadMessages();
     }
 
     @Override
@@ -78,52 +76,16 @@ public class ToFileChatClient implements ChatClient {
     }
 
     private void raiseEventListenerUsersChanged() {
-        listenersLoggedUserChanged.forEach(l -> {
-            l.actionPerformed(new ActionEvent(this, 1, "listenerLoggedUsersChanged"));
-        });
+        listenersLoggedUserChanged.forEach(l -> l.actionPerformed(new ActionEvent(this, 1, "listenerLoggedUsersChanged")));
     }
 
     private void raiseEventListenerMessageAdded() {
-        listenerMessageAdded.forEach(m -> {
-            m.actionPerformed(new ActionEvent(this, 1, "listenerMessageAdded"));
-        });
+        listenerMessageAdded.forEach(m -> m.actionPerformed(new ActionEvent(this, 1, "listenerMessageAdded")));
     }
 
     private void addMessage(Message message) {
         messages.add(message);
-        writeMessagesToFile();
+        chatFileOperations.writeMessagesToFile(messages);
         raiseEventListenerMessageAdded();
-    }
-
-    private void writeMessagesToFile() {
-        String json = gson.toJson(messages);
-
-        try {
-            FileWriter writer = new FileWriter(MESSAGES_FILE);
-            writer.write(json);
-            writer.flush();
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void readMessagesFromFile() {
-        File f = new File(MESSAGES_FILE);
-        if (f.exists() && !f.isDirectory())
-            try {
-                FileReader reader = new FileReader(MESSAGES_FILE);
-                BufferedReader bufferedReader = new BufferedReader(reader);
-                StringBuilder json = new StringBuilder();
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    json.append(line);
-                }
-                Type targetType = new TypeToken<ArrayList<Message>>() {
-                }.getType();
-                messages = gson.fromJson(json.toString(), targetType);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
     }
 }
