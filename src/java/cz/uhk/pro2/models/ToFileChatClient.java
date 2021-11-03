@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ToFileChatClient implements ChatClient {
-    private Gson gson;
     private ChatFileOperations chatFileOperations;
     private String loggedUser;
     private List<Message> messages;
@@ -26,7 +25,8 @@ public class ToFileChatClient implements ChatClient {
         messages = new ArrayList<>();
         loggedUsers = new ArrayList<>();
         this.chatFileOperations = chatFileOperations;
-        chatFileOperations.loadMessages();
+        messages =  chatFileOperations.loadMessages();
+        raiseEventListenerMessageAdded();
     }
 
     @Override

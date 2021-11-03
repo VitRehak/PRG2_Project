@@ -10,7 +10,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JsonChatFileOperations implements ChatFileOperations{
+public class JsonChatFileOperations implements ChatFileOperations {
     private static final String MESSAGES_FILE = "./messages.json";
     private final Gson gson;
 
@@ -20,8 +20,7 @@ public class JsonChatFileOperations implements ChatFileOperations{
 
     @Override
     public List<Message> loadMessages() {
-        File f = new File(MESSAGES_FILE);
-        if (f.exists() && !f.isDirectory())
+        List<Message> messages = new ArrayList<>();
             try {
                 FileReader reader = new FileReader(MESSAGES_FILE);
                 BufferedReader bufferedReader = new BufferedReader(reader);
@@ -32,13 +31,13 @@ public class JsonChatFileOperations implements ChatFileOperations{
                 }
                 Type targetType = new TypeToken<ArrayList<Message>>() {
                 }.getType();
-                return gson.fromJson(json.toString(), targetType);
+                messages = gson.fromJson(json.toString(), targetType);
             } catch (IOException e) {
                 e.printStackTrace();
-
             }
-        return new ArrayList<>();
+        return messages;
     }
+
     @Override
     public void writeMessagesToFile(List<Message> messages) {
         String json = gson.toJson(messages);
