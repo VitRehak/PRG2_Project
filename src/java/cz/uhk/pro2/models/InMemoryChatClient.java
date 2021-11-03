@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InMemoryChatClient implements ChatClient {
+
     private String loggedUser;
     private List<Message> messages;
     private List<String> loggedUsers;
@@ -16,6 +17,7 @@ public class InMemoryChatClient implements ChatClient {
         messages = new ArrayList<>();
         loggedUsers = new ArrayList<>();
     }
+
 
     @Override
     public Boolean isAuthenticated() {

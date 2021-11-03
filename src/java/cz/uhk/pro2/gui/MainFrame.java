@@ -67,7 +67,6 @@ public class MainFrame extends JFrame {
                     return;
                 }
             }
-            //refreshMessages();
         });
         panelLogin.add(btnLogin);
     }
@@ -79,6 +78,7 @@ public class MainFrame extends JFrame {
         txtAreaChat.setAutoscrolls(true);
         txtAreaChat.setEnabled(false);
         chatClient.addActionListenerMessageAdded(e -> refreshMessages());
+        refreshMessages();
         JScrollPane scrollPane = new JScrollPane(txtAreaChat);
         panelChat.add(scrollPane);
     }
@@ -95,9 +95,6 @@ public class MainFrame extends JFrame {
                 return;
             chatClient.sendMessage(text);
             txtInputMessage.setText("");
-            //refreshMessages();
-
-
         });
         panelFooter.add(btnSend);
     }

@@ -28,6 +28,12 @@ public class Message {
         }
     }
 
+    public Message(String author, String text, LocalDateTime created) {
+        this.author = author;
+        this.text = text;
+        this.created = created;
+    }
+
     public String getAuthor() {
         return author;
     }
@@ -42,9 +48,6 @@ public class Message {
 
     @Override
     public String toString() {
-        if (author == AUTHOR_SYSTEM) {
-
-        }
         String msg = author + " [" + created + "]\n";
         msg += text + "\n";
         return msg;
