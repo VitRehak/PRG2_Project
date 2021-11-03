@@ -8,10 +8,7 @@ import cz.uhk.pro2.models.chatFileOperations.JsonChatFileOperations;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -91,6 +88,7 @@ public class ToFileChatClient implements ChatClient {
             m.actionPerformed(new ActionEvent(this, 1, "listenerMessageAdded"));
         });
     }
+
     private void addMessage(Message message) {
         messages.add(message);
         writeMessagesToFile();
@@ -111,19 +109,21 @@ public class ToFileChatClient implements ChatClient {
     }
 
     private void readMessagesFromFile() {
-        try {
-            FileReader reader = new FileReader(MESSAGES_FILE);
-            BufferedReader bufferedReader= new BufferedReader(reader);
-            StringBuilder json = new StringBuilder();
-            String line;
-            while((line = bufferedReader.readLine()) !=null){
-                json.append(line);
+        File f = new File(MESSAGES_FILE);
+        if (f.exists() && !f.isDirectory())
+            try {
+                FileReader reader = new FileReader(MESSAGES_FILE);
+                BufferedReader bufferedReader = new BufferedReader(reader);
+                StringBuilder json = new StringBuilder();
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    json.append(line);
+                }
+                Type targetType = new TypeToken<ArrayList<Message>>() {
+                }.getType();
+                messages = gson.fromJson(json.toString(), targetType);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            Type targetType = new TypeToken<ArrayList<Message>>(){}.getType();
-            messages = gson.fromJson(json.toString(),targetType);
-            System.out.println("a");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
