@@ -4,6 +4,7 @@ import cz.uhk.pro2.gui.MainFrame;
 import cz.uhk.pro2.models.ChatClient;
 import cz.uhk.pro2.models.InMemoryChatClient;
 import cz.uhk.pro2.models.ToFileChatClient;
+import cz.uhk.pro2.models.WebChatClient;
 import cz.uhk.pro2.models.chatFileOperations.ChatFileOperations;
 import cz.uhk.pro2.models.chatFileOperations.CsvChatFileOperations;
 import cz.uhk.pro2.models.chatFileOperations.JsonChatFileOperations;
@@ -13,9 +14,10 @@ public class Main {
     public static void main(String[] args) {
         ChatFileOperations json = new JsonChatFileOperations();
         ChatFileOperations cSV = new CsvChatFileOperations();
-        ChatClient chatClient = new ToFileChatClient(json);
+        //ChatClient chatClient = new ToFileChatClient(json);
+        ChatClient chatClient = new WebChatClient();
 
-        MainFrame mainFrame = new MainFrame(800, 600,chatClient);
+                MainFrame mainFrame = new MainFrame(800, 600,chatClient);
 
         mainFrame.setVisible(true);
     }
