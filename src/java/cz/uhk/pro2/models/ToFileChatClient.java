@@ -1,15 +1,9 @@
 package cz.uhk.pro2.models;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import cz.uhk.pro2.models.chatFileOperations.ChatFileOperations;
-import cz.uhk.pro2.models.chatFileOperations.JsonChatFileOperations;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +19,7 @@ public class ToFileChatClient implements ChatClient {
         messages = new ArrayList<>();
         loggedUsers = new ArrayList<>();
         this.chatFileOperations = chatFileOperations;
-        messages =  chatFileOperations.loadMessages();
+        messages = chatFileOperations.loadMessages();
         raiseEventListenerMessageAdded();
     }
 
@@ -84,6 +78,8 @@ public class ToFileChatClient implements ChatClient {
     }
 
     private void addMessage(Message message) {
+        if (messages == null)
+            messages = new ArrayList<>();
         messages.add(message);
         chatFileOperations.writeMessagesToFile(messages);
         raiseEventListenerMessageAdded();

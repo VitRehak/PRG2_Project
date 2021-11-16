@@ -8,7 +8,4 @@ public interface ChatFileOperations {
 
     List<Message>loadMessages();
     void writeMessagesToFile (List<Message> messages);
-
-    List<String>loadLoggedUsers();
-    void writeLoggedUsers (List<String> users);
 }

@@ -1,0 +1,26 @@
+[
+  {
+    "author": "System",
+    "text": "vitek has joined the chat",
+    "created": "2021-11-16T18:33:47.5504689",
+    "AUTHOR_SYSTEM": "System"
+  },
+  {
+    "author": "vitek",
+    "text": "gdfgdfgd",
+    "created": "2021-11-16T18:33:49.4764685",
+    "AUTHOR_SYSTEM": "System"
+  },
+  {
+    "author": "vitek",
+    "text": "bcvbcvbcv",
+    "created": "2021-11-16T18:33:51.6114633",
+    "AUTHOR_SYSTEM": "System"
+  },
+  {
+    "author": "System",
+    "text": "vitek has left the chat",
+    "created": "2021-11-16T18:33:52.6984697",
+    "AUTHOR_SYSTEM": "System"
+  }
+]

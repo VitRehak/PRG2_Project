@@ -1,7 +1,10 @@
 package cz.uhk.pro2.models;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import cz.uhk.pro2.convertor.LocalDateTimeConverter;
+import cz.uhk.pro2.convertor.LocalDateTimeWebConverter;
 import cz.uhk.pro2.models.api.MessageRequest;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -14,6 +17,8 @@ import org.apache.http.util.EntityUtils;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.Point2D;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -30,16 +35,15 @@ public class WebChatClient implements ChatClient {
     private List<String> loggedUsers;
     private List<Message> messages;
 
-    private Gson gson;
+    private final Gson gson;
 
     private List<ActionListener> listenersLoggedUserChanged = new ArrayList<>();
     private List<ActionListener> listenerMessageAdded = new ArrayList<>();
 
     public WebChatClient() {
-        gson = new Gson();
+        gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeWebConverter()).create();
         loggedUsers = new ArrayList<>();
         messages = new ArrayList<>();
-
 
         Runnable refreshLoggedUsersRun = () -> {
             Thread.currentThread().setName("refreshLoggedUsersThread");
@@ -47,7 +51,6 @@ public class WebChatClient implements ChatClient {
                 if (isAuthenticated()) {
                     refreshLoggedUsers();
                 }
-
                 try {
                     TimeUnit.SECONDS.sleep(5);
                 } catch (InterruptedException e) {
@@ -57,6 +60,20 @@ public class WebChatClient implements ChatClient {
         };
         Thread thread = new Thread(refreshLoggedUsersRun);
         thread.start();
+
+        new Thread(() -> {
+            Thread.currentThread().setName("refreshMessages");
+            while (true) {
+                if (isAuthenticated()) {
+                    refreshMessages();
+                }
+                try {
+                    TimeUnit.SECONDS.sleep(5);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     @Override
@@ -152,8 +169,8 @@ public class WebChatClient implements ChatClient {
 
             if (response.getStatusLine().getStatusCode() == 200) {
                 HttpEntity entity = response.getEntity();
-                String jsonResoult = EntityUtils.toString(entity);
-                loggedUsers = gson.fromJson(jsonResoult, new TypeToken<ArrayList<String>>() {
+                String jsonResult = EntityUtils.toString(entity);
+                loggedUsers = gson.fromJson(jsonResult, new TypeToken<ArrayList<String>>() {
                 }.getType());
 
                 raiseEventListenerUsersChanged();
@@ -178,7 +195,7 @@ public class WebChatClient implements ChatClient {
             CloseableHttpResponse response = httpClient.execute(post);
 
             if (response.getStatusLine().getStatusCode() == 204) {
-                refreshMessages();
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -186,6 +203,22 @@ public class WebChatClient implements ChatClient {
     }
 
     private void refreshMessages() {
+        try {
+            System.out.println("Refreshing messages");
+            String url = BASE_URL + "/api/chat/getMessages";
+            HttpGet get = new HttpGet(url);
+            CloseableHttpClient httpClient = HttpClients.createDefault();
+            CloseableHttpResponse response = httpClient.execute(get);
 
+            if (response.getStatusLine().getStatusCode() == 200) {
+                HttpEntity entity = response.getEntity();
+                String jsonResult = EntityUtils.toString(entity);
+                messages = gson.fromJson(jsonResult, new TypeToken<ArrayList<Message>>() {
+                }.getType());
+                raiseEventListenerMessageAdded();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

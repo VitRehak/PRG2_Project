@@ -63,16 +63,4 @@ public class CsvChatFileOperations implements ChatFileOperations {
             e.printStackTrace();
         }
     }
-
-    @Override
-    public List<String> loadLoggedUsers() {
-        return null;
-    }
-
-    @Override
-    public void writeLoggedUsers(List<String> users) {
-
-    }
-
-
 }

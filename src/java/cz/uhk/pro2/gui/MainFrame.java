@@ -119,9 +119,10 @@ public class MainFrame extends JFrame {
 
     private void refreshMessages() {
         txtAreaChat.setText("");
-        chatClient.getMessages().forEach(message -> {
-            txtAreaChat.append(message.toString());
-            txtAreaChat.append("\n");
-        });
+        if (chatClient.getMessages()!= null)
+            chatClient.getMessages().forEach(message -> {
+                txtAreaChat.append(message.toString());
+                txtAreaChat.append("\n");
+            });
     }
 }
