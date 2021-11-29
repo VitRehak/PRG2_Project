@@ -174,8 +174,6 @@ public class WebChatClient implements ChatClient {
                 }.getType());
 
                 raiseEventListenerUsersChanged();
-
-
             }
         } catch (Exception e) {
             e.printStackTrace();
