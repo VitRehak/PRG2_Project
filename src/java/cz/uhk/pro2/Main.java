@@ -1,6 +1,7 @@
 package cz.uhk.pro2;
 
 import cz.uhk.pro2.chatClient.*;
+import cz.uhk.pro2.chatFileOperations.XmlChatFileOperations;
 import cz.uhk.pro2.gui.MainFrame;
 import cz.uhk.pro2.chatFileOperations.ChatFileOperations;
 import cz.uhk.pro2.chatFileOperations.CsvChatFileOperations;
@@ -22,12 +23,13 @@ public class Main {
 
             ChatFileOperations json = new JsonChatFileOperations();
             ChatFileOperations cSV = new CsvChatFileOperations();
+            ChatFileOperations xML = new XmlChatFileOperations();
 
-            ChatClient toFileChatClient = new ToFileChatClient(json);
+            ChatClient toFileChatClient = new ToFileChatClient(xML);
             ChatClient databaseChatClient = new DatabaseChatClient(databaseOperations);
             ChatClient webChatClient = new WebChatClient();
 
-            MainFrame mainFrame = new MainFrame(800, 600, databaseChatClient);
+            MainFrame mainFrame = new MainFrame(800, 600, toFileChatClient);
             mainFrame.setVisible(true);
         } catch (Exception e) {
             e.printStackTrace();
