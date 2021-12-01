@@ -1,4 +1,4 @@
-package cz.uhk.pro2.models.database;
+package cz.uhk.pro2.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -19,7 +19,7 @@ public class DbInitializer {
             Connection connection = DriverManager.getConnection(url);
             Statement statement = connection.createStatement();
             String sqlDropMessagesTable ="DROP TABLE ChatMessages";
-            //statement.executeUpdate(sqlDropMessagesTable);
+            statement.executeUpdate(sqlDropMessagesTable);
             String sqlCreateMessengers =
                     "CREATE TABLE ChatMessages"
                     +"("

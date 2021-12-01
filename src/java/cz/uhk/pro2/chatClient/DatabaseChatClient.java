@@ -1,6 +1,7 @@
-package cz.uhk.pro2.models;
+package cz.uhk.pro2.chatClient;
 
-import cz.uhk.pro2.models.database.DatabaseOperations;
+import cz.uhk.pro2.models.Message;
+import cz.uhk.pro2.database.DatabaseOperations;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,19 +9,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseChatClient implements ChatClient {
+
+    private final DatabaseOperations databaseOperations;
     private String loggedUser;
-    private List<Message> messages;
-    private List<String> loggedUsers;
-    private List<ActionListener> listenersLoggedUserChanged = new ArrayList<>();
-    private List<ActionListener> listenerMessageAdded = new ArrayList<>();
-    private DatabaseOperations databaseOperations;
+
+    private final List<Message> messages;
+    private final List<String> loggedUsers;
+
+    private final List<ActionListener> listenersLoggedUserChanged = new ArrayList<>();
+    private final List<ActionListener> listenerMessageAdded = new ArrayList<>();
 
     public DatabaseChatClient(DatabaseOperations databaseOperations) {
         this.databaseOperations = databaseOperations;
         messages = databaseOperations.getMessages();
         loggedUsers = new ArrayList<>();
+        raiseEventListenerMessageAdded();
     }
-
 
     @Override
     public Boolean isAuthenticated() {
@@ -31,26 +35,21 @@ public class DatabaseChatClient implements ChatClient {
     public void login(String userName) {
         loggedUser = userName;
         loggedUsers.add(userName);
-        messages.add(new Message(Message.USER_LOGGED_IN, userName));
+        addMessage(new Message(Message.USER_LOGGED_IN, userName));
         raiseEventListenerUsersChanged();
-        raiseEventListenerMessageAdded();
     }
 
     @Override
     public void logout() {
         loggedUsers.remove(loggedUser);
-        messages.add(new Message(Message.USER_LOGGED_OUT, loggedUser));
+        addMessage(new Message(Message.USER_LOGGED_OUT, loggedUser));
         loggedUser = null;
         raiseEventListenerUsersChanged();
-        raiseEventListenerMessageAdded();
     }
 
     @Override
     public void sendMessage(String text) {
-        Message m = new Message(loggedUser, text);
-        messages.add(m);
-        databaseOperations.addMessage(m);
-        raiseEventListenerMessageAdded();
+        addMessage(new Message(loggedUser, text));
     }
 
     @Override
@@ -74,14 +73,16 @@ public class DatabaseChatClient implements ChatClient {
     }
 
     private void raiseEventListenerUsersChanged() {
-        listenersLoggedUserChanged.forEach(l -> {
-            l.actionPerformed(new ActionEvent(this, 1, "listenerLoggedUsersChanged"));
-        });
+        listenersLoggedUserChanged.forEach(l -> l.actionPerformed(new ActionEvent(this, 1, "listenerLoggedUsersChanged")));
     }
 
     private void raiseEventListenerMessageAdded() {
-        listenerMessageAdded.forEach(m -> {
-            m.actionPerformed(new ActionEvent(this, 1, "listenerMessageAdded"));
-        });
+        listenerMessageAdded.forEach(m -> m.actionPerformed(new ActionEvent(this, 1, "listenerMessageAdded")));
+    }
+
+    private void addMessage(Message message) {
+        messages.add(message);
+        databaseOperations.addMessage(message);
+        raiseEventListenerMessageAdded();
     }
 }

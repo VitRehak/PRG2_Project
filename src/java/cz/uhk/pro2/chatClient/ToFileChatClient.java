@@ -1,6 +1,7 @@
-package cz.uhk.pro2.models;
+package cz.uhk.pro2.chatClient;
 
-import cz.uhk.pro2.models.chatFileOperations.ChatFileOperations;
+import cz.uhk.pro2.models.Message;
+import cz.uhk.pro2.chatFileOperations.ChatFileOperations;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,18 +9,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ToFileChatClient implements ChatClient {
-    private ChatFileOperations chatFileOperations;
+
+    private final ChatFileOperations chatFileOperations;
     private String loggedUser;
-    private List<Message> messages;
-    private List<String> loggedUsers;
-    private List<ActionListener> listenersLoggedUserChanged = new ArrayList<>();
-    private List<ActionListener> listenerMessageAdded = new ArrayList<>();
+
+    private final List<Message> messages;
+    private final List<String> loggedUsers;
+
+    private final List<ActionListener> listenersLoggedUserChanged = new ArrayList<>();
+    private final List<ActionListener> listenerMessageAdded = new ArrayList<>();
 
     public ToFileChatClient(ChatFileOperations chatFileOperations) {
-        messages = new ArrayList<>();
-        loggedUsers = new ArrayList<>();
         this.chatFileOperations = chatFileOperations;
         messages = chatFileOperations.loadMessages();
+        loggedUsers = new ArrayList<>();
         raiseEventListenerMessageAdded();
     }
 
@@ -78,8 +81,6 @@ public class ToFileChatClient implements ChatClient {
     }
 
     private void addMessage(Message message) {
-        if (messages == null)
-            messages = new ArrayList<>();
         messages.add(message);
         chatFileOperations.writeMessagesToFile(messages);
         raiseEventListenerMessageAdded();

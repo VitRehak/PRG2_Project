@@ -1,4 +1,6 @@
-package cz.uhk.pro2.models;
+package cz.uhk.pro2.chatClient;
+
+import cz.uhk.pro2.models.Message;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,10 +10,12 @@ import java.util.List;
 public class InMemoryChatClient implements ChatClient {
 
     private String loggedUser;
-    private List<Message> messages;
-    private List<String> loggedUsers;
-    private List<ActionListener> listenersLoggedUserChanged = new ArrayList<>();
-    private List<ActionListener> listenerMessageAdded = new ArrayList<>();
+
+    private final List<Message> messages;
+    private final List<String> loggedUsers;
+
+    private final List<ActionListener> listenersLoggedUserChanged = new ArrayList<>();
+    private final List<ActionListener> listenerMessageAdded = new ArrayList<>();
 
     public InMemoryChatClient() {
         messages = new ArrayList<>();
@@ -28,24 +32,21 @@ public class InMemoryChatClient implements ChatClient {
     public void login(String userName) {
         loggedUser = userName;
         loggedUsers.add(userName);
-        messages.add(new Message(Message.USER_LOGGED_IN, userName));
+        addMessage(new Message(Message.USER_LOGGED_IN, userName));
         raiseEventListenerUsersChanged();
-        raiseEventListenerMessageAdded();
     }
 
     @Override
     public void logout() {
         loggedUsers.remove(loggedUser);
-        messages.add(new Message(Message.USER_LOGGED_OUT, loggedUser));
+        addMessage(new Message(Message.USER_LOGGED_OUT, loggedUser));
         loggedUser = null;
         raiseEventListenerUsersChanged();
-        raiseEventListenerMessageAdded();
     }
 
     @Override
     public void sendMessage(String text) {
-        messages.add(new Message(loggedUser, text));
-        raiseEventListenerMessageAdded();
+        addMessage(new Message(loggedUser, text));
     }
 
     @Override
@@ -69,14 +70,15 @@ public class InMemoryChatClient implements ChatClient {
     }
 
     private void raiseEventListenerUsersChanged() {
-        listenersLoggedUserChanged.forEach(l -> {
-            l.actionPerformed(new ActionEvent(this, 1, "listenerLoggedUsersChanged"));
-        });
+        listenersLoggedUserChanged.forEach(l -> l.actionPerformed(new ActionEvent(this, 1, "listenerLoggedUsersChanged")));
     }
 
     private void raiseEventListenerMessageAdded() {
-        listenerMessageAdded.forEach(m -> {
-            m.actionPerformed(new ActionEvent(this, 1, "listenerMessageAdded"));
-        });
+        listenerMessageAdded.forEach(m -> m.actionPerformed(new ActionEvent(this, 1, "listenerMessageAdded")));
+    }
+
+    private void addMessage(Message message) {
+        messages.add(message);
+        raiseEventListenerMessageAdded();
     }
 }

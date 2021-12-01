@@ -1,15 +1,12 @@
 package cz.uhk.pro2;
 
+import cz.uhk.pro2.chatClient.*;
 import cz.uhk.pro2.gui.MainFrame;
-import cz.uhk.pro2.models.*;
-import cz.uhk.pro2.models.chatFileOperations.ChatFileOperations;
-import cz.uhk.pro2.models.chatFileOperations.CsvChatFileOperations;
-import cz.uhk.pro2.models.chatFileOperations.JsonChatFileOperations;
-import cz.uhk.pro2.models.database.DatabaseOperations;
-import cz.uhk.pro2.models.database.DbInitializer;
-import cz.uhk.pro2.models.database.JdbcDatabaseOperations;
-
-import java.sql.SQLException;
+import cz.uhk.pro2.chatFileOperations.ChatFileOperations;
+import cz.uhk.pro2.chatFileOperations.CsvChatFileOperations;
+import cz.uhk.pro2.chatFileOperations.JsonChatFileOperations;
+import cz.uhk.pro2.database.DatabaseOperations;
+import cz.uhk.pro2.database.JdbcDatabaseOperations;
 
 public class Main {
 
@@ -19,6 +16,7 @@ public class Main {
             String databaseDriver = "org.apache.derby.jdbc.EmbeddedDriver";
             String databaseUrl = "jdbc:derby:ChatClientDb";
             DatabaseOperations databaseOperations = new JdbcDatabaseOperations(databaseDriver, databaseUrl);
+
             //DbInitializer dbInitializer = new DbInitializer(databaseDriver, databaseUrl);
             //dbInitializer.init();
 
@@ -29,7 +27,7 @@ public class Main {
             ChatClient databaseChatClient = new DatabaseChatClient(databaseOperations);
             ChatClient webChatClient = new WebChatClient();
 
-            MainFrame mainFrame = new MainFrame(800, 600, toFileChatClient);
+            MainFrame mainFrame = new MainFrame(800, 600, databaseChatClient);
             mainFrame.setVisible(true);
         } catch (Exception e) {
             e.printStackTrace();

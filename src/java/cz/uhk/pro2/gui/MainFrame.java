@@ -1,6 +1,6 @@
 package cz.uhk.pro2.gui;
 
-import cz.uhk.pro2.models.ChatClient;
+import cz.uhk.pro2.chatClient.ChatClient;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +13,7 @@ public class MainFrame extends JFrame {
     private JTable tblLoggedUsers;
 
     private LoggedUserTableModel loggedUserTableModel;
-    private ChatClient chatClient;
+    private final ChatClient chatClient;
 
     public MainFrame(int width, int height, ChatClient chatClient) {
         super("PRO2 Chat client 2021");
@@ -64,7 +64,6 @@ public class MainFrame extends JFrame {
 
                 } else {
                     JOptionPane.showMessageDialog(null, "Enter your user name", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
                 }
             }
         });
@@ -100,13 +99,6 @@ public class MainFrame extends JFrame {
     }
 
     private void initLoggedUsersPanel(JPanel panelLoggedUser) {
-        /*Object[][]data= new Object[][]{
-                {"1:1","1:2"},
-                {"2:1","2:2"},
-                {"3:1","3:2"}
-        };
-        String[]colNames=new String[]{"Column 1", "Column 2"};
-        tblLoggedUsers = new JTable(data,colNames);*/
         loggedUserTableModel = new LoggedUserTableModel(chatClient);
         tblLoggedUsers = new JTable();
         tblLoggedUsers.setModel(loggedUserTableModel);
@@ -119,7 +111,7 @@ public class MainFrame extends JFrame {
 
     private void refreshMessages() {
         txtAreaChat.setText("");
-        if (chatClient.getMessages()!= null)
+        if (chatClient.getMessages() != null)
             chatClient.getMessages().forEach(message -> {
                 txtAreaChat.append(message.toString());
                 txtAreaChat.append("\n");

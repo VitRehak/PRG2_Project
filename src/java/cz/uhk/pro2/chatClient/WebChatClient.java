@@ -1,10 +1,10 @@
-package cz.uhk.pro2.models;
+package cz.uhk.pro2.chatClient;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import cz.uhk.pro2.convertor.LocalDateTimeConverter;
-import cz.uhk.pro2.convertor.LocalDateTimeWebConverter;
+import cz.uhk.pro2.convertor.WebLocalDateTimeConverter;
+import cz.uhk.pro2.models.Message;
 import cz.uhk.pro2.models.api.MessageRequest;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -17,7 +17,6 @@ import org.apache.http.util.EntityUtils;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.Point2D;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,36 +36,32 @@ public class WebChatClient implements ChatClient {
 
     private final Gson gson;
 
-    private List<ActionListener> listenersLoggedUserChanged = new ArrayList<>();
-    private List<ActionListener> listenerMessageAdded = new ArrayList<>();
+    private final List<ActionListener> listenersLoggedUserChanged = new ArrayList<>();
+    private final List<ActionListener> listenerMessageAdded = new ArrayList<>();
 
     public WebChatClient() {
-        gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeWebConverter()).create();
+        gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new WebLocalDateTimeConverter()).create();
         loggedUsers = new ArrayList<>();
         messages = new ArrayList<>();
 
-        Runnable refreshLoggedUsersRun = () -> {
+        new Thread(() -> {
             Thread.currentThread().setName("refreshLoggedUsersThread");
             while (true) {
-                if (isAuthenticated()) {
+                if (isAuthenticated())
                     refreshLoggedUsers();
-                }
                 try {
                     TimeUnit.SECONDS.sleep(5);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-        };
-        Thread thread = new Thread(refreshLoggedUsersRun);
-        thread.start();
+        }).start();
 
         new Thread(() -> {
-            Thread.currentThread().setName("refreshMessages");
+            Thread.currentThread().setName("refreshMessagesThread");
             while (true) {
-                if (isAuthenticated()) {
+                if (isAuthenticated())
                     refreshMessages();
-                }
                 try {
                     TimeUnit.SECONDS.sleep(5);
                 } catch (InterruptedException e) {

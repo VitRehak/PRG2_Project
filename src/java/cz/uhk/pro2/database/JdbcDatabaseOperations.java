@@ -1,4 +1,4 @@
-package cz.uhk.pro2.models.database;
+package cz.uhk.pro2.database;
 
 import cz.uhk.pro2.models.Message;
 

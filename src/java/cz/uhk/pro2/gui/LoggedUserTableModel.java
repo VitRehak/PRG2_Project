@@ -1,6 +1,6 @@
 package cz.uhk.pro2.gui;
 
-import cz.uhk.pro2.models.ChatClient;
+import cz.uhk.pro2.chatClient.ChatClient;
 
 import javax.swing.table.AbstractTableModel;
 

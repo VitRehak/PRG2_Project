@@ -6,7 +6,7 @@ import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class LocalDateTimeWebConverter implements JsonDeserializer<LocalDateTime> {
+public class WebLocalDateTimeConverter implements JsonDeserializer<LocalDateTime> {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_DATE_TIME;
 
     @Override

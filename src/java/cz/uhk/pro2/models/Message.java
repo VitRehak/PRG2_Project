@@ -3,9 +3,9 @@ package cz.uhk.pro2.models;
 import java.time.LocalDateTime;
 
 public class Message {
-    private String author;
+    private final String author;
     private String text;
-    private LocalDateTime created;
+    private final LocalDateTime created;
 
     public static final int USER_LOGGED_IN = 1;
     public static final int USER_LOGGED_OUT = 2;

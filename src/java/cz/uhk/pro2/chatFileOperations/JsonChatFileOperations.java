@@ -1,4 +1,4 @@
-package cz.uhk.pro2.models.chatFileOperations;
+package cz.uhk.pro2.chatFileOperations;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;

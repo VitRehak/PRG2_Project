@@ -1,4 +1,4 @@
-package cz.uhk.pro2.models.chatFileOperations;
+package cz.uhk.pro2.chatFileOperations;
 
 import cz.uhk.pro2.models.Message;
 
