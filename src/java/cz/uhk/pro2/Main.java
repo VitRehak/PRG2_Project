@@ -18,20 +18,21 @@ public class Main {
         try {
             String databaseDriver = "org.apache.derby.jdbc.EmbeddedDriver";
             String databaseUrl = "jdbc:derby:ChatClientDb";
+            DatabaseOperations databaseOperations = new JdbcDatabaseOperations(databaseDriver, databaseUrl);
+            //DbInitializer dbInitializer = new DbInitializer(databaseDriver, databaseUrl);
+            //dbInitializer.init();
+
             ChatFileOperations json = new JsonChatFileOperations();
             ChatFileOperations cSV = new CsvChatFileOperations();
-            //ChatClient chatClient = new ToFileChatClient(json);
-            ChatClient chatClient = new WebChatClient();
-            DbInitializer dbInitializer = new DbInitializer(databaseDriver, databaseUrl);
-            //dbInitializer.init();
-            DatabaseOperations databaseOperations = null;
-            databaseOperations = new JdbcDatabaseOperations(databaseDriver, databaseUrl);
-            chatClient = new DatabaseChatClient(databaseOperations);
-            MainFrame mainFrame = new MainFrame(800, 600, chatClient);
+
+            ChatClient toFileChatClient = new ToFileChatClient(json);
+            ChatClient databaseChatClient = new DatabaseChatClient(databaseOperations);
+            ChatClient webChatClient = new WebChatClient();
+
+            MainFrame mainFrame = new MainFrame(800, 600, toFileChatClient);
             mainFrame.setVisible(true);
         } catch (Exception e) {
             e.printStackTrace();
-
         }
     }
 
@@ -56,6 +57,5 @@ public class Main {
         System.out.println("loging out");
         chatClient.logout();
         System.out.println("user is logged:" + chatClient.isAuthenticated());
-
     }
 }
