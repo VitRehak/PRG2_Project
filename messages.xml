@@ -1,0 +1,32 @@
+<ArrayList>
+    <item>
+        <author>System</author>
+        <text>neco has joined the chat</text>
+        <created>2021-12-01T22:23:30.0193791</created>
+    </item>
+    <item>
+        <author>neco</author>
+        <text>nekdo</text>
+        <created>2021-12-01T22:23:33.9545863</created>
+    </item>
+    <item>
+        <author>System</author>
+        <text>neco has left the chat</text>
+        <created>2021-12-01T22:23:34.6985846</created>
+    </item>
+    <item>
+        <author>System</author>
+        <text>jeb has joined the chat</text>
+        <created>2021-12-01T22:24:08.9655611</created>
+    </item>
+    <item>
+        <author>System</author>
+        <text>tak jo has joined the chat</text>
+        <created>2021-12-01T22:29:41.5788305</created>
+    </item>
+    <item>
+        <author>System</author>
+        <text>tak jo has left the chat</text>
+        <created>2021-12-01T22:29:42.2122179</created>
+    </item>
+</ArrayList>
